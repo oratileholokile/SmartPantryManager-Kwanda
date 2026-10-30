@@ -12,6 +12,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartPantryManagerKwanda">
         <activity
+            android:name=".PantryActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".RecipesActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".RecipeDetailActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
