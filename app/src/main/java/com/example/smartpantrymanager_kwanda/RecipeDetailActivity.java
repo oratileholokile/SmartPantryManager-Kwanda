@@ -1,3 +1,4 @@
+
 package com.example.smartpantrymanager_kwanda;
 
 import android.app.Activity;
@@ -12,82 +13,121 @@ import android.widget.TextView;
 public class RecipeDetailActivity extends Activity {
 
     private final int background = Color.rgb(241, 248, 241);
+    private final int green = Color.rgb(56, 142, 60);
     private final int darkGreen = Color.rgb(27, 94, 32);
     private final int textColor = Color.rgb(36, 59, 42);
+    private final int white = Color.WHITE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        buildScreen();
+    }
 
-        ScrollView scrollView = new ScrollView(this);
-        scrollView.setBackgroundColor(background);
-
-        LinearLayout layout = new LinearLayout(this);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setPadding(24, 24, 24, 24);
-
-        scrollView.addView(layout);
-        setContentView(scrollView);
-
-        Button backButton = new Button(this);
-        backButton.setText("← Back to Recipes");
-        backButton.setAllCaps(false);
-        backButton.setTextColor(Color.WHITE);
-        backButton.setBackgroundTintList(
-                android.content.res.ColorStateList.valueOf(darkGreen)
-        );
-
-        layout.addView(backButton);
-        backButton.setOnClickListener(v -> finish());
+    private void buildScreen() {
 
         String recipeName = getIntent().getStringExtra("recipeName");
         String ingredients = getIntent().getStringExtra("recipeIngredients");
         String instructions = getIntent().getStringExtra("recipeInstructions");
 
-        TextView title = new TextView(this);
-        title.setText(recipeName != null ? recipeName : "Recipe Details");
-        title.setTextSize(28);
-        title.setTypeface(null, Typeface.BOLD);
-        title.setTextColor(darkGreen);
-        title.setPadding(0, 20, 0, 20);
+        if (recipeName == null) {
+            recipeName = "Recipe";
+        }
 
-        layout.addView(title);
+        if (ingredients == null) {
+            ingredients = "No ingredients available.";
+        }
 
-        TextView ingredientsTitle = new TextView(this);
-        ingredientsTitle.setText("Ingredients");
-        ingredientsTitle.setTextSize(21);
-        ingredientsTitle.setTypeface(null, Typeface.BOLD);
-        ingredientsTitle.setTextColor(darkGreen);
+        if (instructions == null) {
+            instructions = "No instructions available.";
+        }
 
-        layout.addView(ingredientsTitle);
+        LinearLayout root = new LinearLayout(this);
+        root.setOrientation(LinearLayout.VERTICAL);
+        root.setPadding(20, 20, 20, 12);
+        root.setBackgroundColor(background);
+
+        setContentView(root);
+
+        TextView heading = new TextView(this);
+        heading.setText(recipeName);
+        heading.setTextSize(27);
+        heading.setTypeface(null, Typeface.BOLD);
+        heading.setTextColor(darkGreen);
+        heading.setPadding(0, 18, 0, 16);
+
+        root.addView(heading);
+
+        ScrollView scrollView = new ScrollView(this);
+
+        LinearLayout.LayoutParams scrollParams =
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        0,
+                        1
+                );
+
+        root.addView(scrollView, scrollParams);
+
+        LinearLayout content = new LinearLayout(this);
+        content.setOrientation(LinearLayout.VERTICAL);
+
+        scrollView.addView(content);
+
+        TextView ingredientsHeading = new TextView(this);
+        ingredientsHeading.setText("Ingredients");
+        ingredientsHeading.setTextSize(21);
+        ingredientsHeading.setTypeface(null, Typeface.BOLD);
+        ingredientsHeading.setTextColor(green);
+        ingredientsHeading.setPadding(0, 8, 0, 8);
+
+        content.addView(ingredientsHeading);
 
         TextView ingredientsText = new TextView(this);
-        ingredientsText.setText(
-                ingredients != null ? "• " + ingredients.replace(", ", "\n• ")
-                        : "No ingredients available."
-        );
+        ingredientsText.setText("• " + ingredients.replace(", ", "\n• "));
         ingredientsText.setTextSize(16);
         ingredientsText.setTextColor(textColor);
-        ingredientsText.setPadding(0, 10, 0, 24);
+        ingredientsText.setPadding(8, 4, 8, 24);
 
-        layout.addView(ingredientsText);
+        content.addView(ingredientsText);
 
-        TextView instructionsTitle = new TextView(this);
-        instructionsTitle.setText("Cooking Instructions");
-        instructionsTitle.setTextSize(21);
-        instructionsTitle.setTypeface(null, Typeface.BOLD);
-        instructionsTitle.setTextColor(darkGreen);
+        TextView instructionsHeading = new TextView(this);
+        instructionsHeading.setText("Cooking Instructions");
+        instructionsHeading.setTextSize(21);
+        instructionsHeading.setTypeface(null, Typeface.BOLD);
+        instructionsHeading.setTextColor(green);
+        instructionsHeading.setPadding(0, 8, 0, 8);
 
-        layout.addView(instructionsTitle);
+        content.addView(instructionsHeading);
 
         TextView instructionsText = new TextView(this);
-        instructionsText.setText(
-                instructions != null ? instructions : "No instructions available."
-        );
+        instructionsText.setText(instructions);
         instructionsText.setTextSize(16);
         instructionsText.setTextColor(textColor);
-        instructionsText.setPadding(0, 10, 0, 20);
+        instructionsText.setPadding(8, 4, 8, 24);
 
-        layout.addView(instructionsText);
+        content.addView(instructionsText);
+
+        // Back button at the bottom
+        Button backButton = new Button(this);
+        backButton.setText("← Back to Recipes");
+        backButton.setTextSize(16);
+        backButton.setAllCaps(false);
+        backButton.setTextColor(white);
+        backButton.setBackgroundTintList(
+                android.content.res.ColorStateList.valueOf(darkGreen)
+        );
+
+        LinearLayout.LayoutParams backParams =
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+
+        backParams.topMargin = 8;
+
+        root.addView(backButton, backParams);
+
+        backButton.setOnClickListener(v -> finish());
     }
 }
