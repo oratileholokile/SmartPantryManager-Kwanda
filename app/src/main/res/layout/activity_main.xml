@@ -60,10 +60,21 @@
             android:layout_marginBottom="14dp" />
 
         <Button
+            android:id="@+id/btnSuggestedRecipes"
+            android:layout_width="match_parent"
+            android:layout_height="76dp"
+            android:text="What Can I Cook?     →"
+            android:textSize="18sp"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#1B5E20"
+            android:layout_marginBottom="14dp" />
+
+        <Button
             android:id="@+id/btnRecipes"
             android:layout_width="match_parent"
             android:layout_height="76dp"
-            android:text="Recipes     →"
+            android:text="All Recipes     →"
             android:textSize="18sp"
             android:textAllCaps="false"
             android:textColor="#1B5E20"
