@@ -1,3 +1,4 @@
+
 package com.example.smartpantrymanager_kwanda;
 
 import android.app.Activity;
@@ -7,7 +8,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.view.Gravity;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -55,18 +55,7 @@ public class PantryActivity extends Activity {
 
         setContentView(root);
 
-        Button backButton = new Button(this);
-        backButton.setText("← Back to Home");
-        backButton.setTextColor(white);
-        backButton.setAllCaps(false);
-        backButton.setBackgroundTintList(
-                android.content.res.ColorStateList.valueOf(darkGreen)
-        );
-
-        root.addView(backButton);
-
-        backButton.setOnClickListener(v -> finish());
-
+        // Heading
         TextView heading = new TextView(this);
         heading.setText("My Pantry");
         heading.setTextSize(30);
@@ -76,6 +65,7 @@ public class PantryActivity extends Activity {
 
         root.addView(heading);
 
+        // Subtitle
         TextView subtitle = new TextView(this);
         subtitle.setText("Keep track of the ingredients in your kitchen.");
         subtitle.setTextSize(15);
@@ -84,6 +74,7 @@ public class PantryActivity extends Activity {
 
         root.addView(subtitle);
 
+        // Add ingredient button
         Button addButton = new Button(this);
         addButton.setText("+ Add Ingredient");
         addButton.setTextSize(16);
@@ -97,6 +88,7 @@ public class PantryActivity extends Activity {
 
         addButton.setOnClickListener(v -> showIngredientDialog(null));
 
+        // Scrollable ingredient list
         ScrollView scrollView = new ScrollView(this);
 
         LinearLayout.LayoutParams scrollParams =
@@ -116,15 +108,40 @@ public class PantryActivity extends Activity {
         scrollView.addView(ingredientContainer);
 
         emptyMessage = new TextView(this);
-        emptyMessage.setText("Your pantry is empty.\nAdd your first ingredient!");
+        emptyMessage.setText(
+                "Your pantry is empty.\nAdd your first ingredient!"
+        );
         emptyMessage.setTextColor(textColor);
         emptyMessage.setTextSize(16);
         emptyMessage.setGravity(Gravity.CENTER);
         emptyMessage.setPadding(12, 35, 12, 35);
 
         ingredientContainer.addView(emptyMessage);
+
+        // Back button at the bottom
+        Button backButton = new Button(this);
+        backButton.setText("← Back to Home");
+        backButton.setTextSize(16);
+        backButton.setAllCaps(false);
+        backButton.setTextColor(white);
+        backButton.setBackgroundTintList(
+                android.content.res.ColorStateList.valueOf(darkGreen)
+        );
+
+        LinearLayout.LayoutParams backParams =
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+
+        backParams.topMargin = 8;
+
+        root.addView(backButton, backParams);
+
+        backButton.setOnClickListener(v -> finish());
     }
 
+    // Load ingredients from SQLite
     private void loadIngredients() {
 
         ingredientContainer.removeAllViews();
@@ -132,6 +149,7 @@ public class PantryActivity extends Activity {
         ArrayList<Ingredient> ingredients = dbHelper.getIngredients();
 
         if (ingredients.isEmpty()) {
+
             emptyMessage = new TextView(this);
             emptyMessage.setText(
                     "Your pantry is empty.\nAdd your first ingredient!"
@@ -150,6 +168,7 @@ public class PantryActivity extends Activity {
         }
     }
 
+    // Display an ingredient card
     private void addIngredientCard(Ingredient ingredient) {
 
         LinearLayout card = new LinearLayout(this);
@@ -171,6 +190,7 @@ public class PantryActivity extends Activity {
 
         ingredientContainer.addView(card, cardParams);
 
+        // Ingredient name
         TextView name = new TextView(this);
         name.setText(ingredient.getName());
         name.setTextSize(20);
@@ -179,6 +199,7 @@ public class PantryActivity extends Activity {
 
         card.addView(name);
 
+        // Ingredient details
         TextView details = new TextView(this);
 
         details.setText(
@@ -193,6 +214,7 @@ public class PantryActivity extends Activity {
 
         card.addView(details);
 
+        // Expiry status
         TextView expiryStatus = new TextView(this);
         expiryStatus.setText(getExpiryStatus(ingredient.getExpiry()));
         expiryStatus.setTextSize(14);
@@ -201,6 +223,7 @@ public class PantryActivity extends Activity {
 
         card.addView(expiryStatus);
 
+        // Edit and delete buttons
         LinearLayout buttons = new LinearLayout(this);
         buttons.setOrientation(LinearLayout.HORIZONTAL);
 
@@ -241,6 +264,7 @@ public class PantryActivity extends Activity {
         deleteButton.setOnClickListener(v -> confirmDelete(ingredient));
     }
 
+    // Add or edit an ingredient
     private void showIngredientDialog(Ingredient ingredient) {
 
         boolean editing = ingredient != null;
@@ -368,6 +392,7 @@ public class PantryActivity extends Activity {
 
                 loadIngredients();
                 dialog.dismiss();
+
             } else {
                 Toast.makeText(
                         this,
@@ -380,6 +405,7 @@ public class PantryActivity extends Activity {
         dialog.show();
     }
 
+    // Create input fields
     private EditText createInput(String hint) {
 
         EditText input = new EditText(this);
@@ -392,6 +418,7 @@ public class PantryActivity extends Activity {
         return input;
     }
 
+    // Validate expiry date
     private boolean isValidDate(String date) {
 
         SimpleDateFormat format = new SimpleDateFormat(
@@ -404,11 +431,13 @@ public class PantryActivity extends Activity {
         try {
             Date parsedDate = format.parse(date);
             return parsedDate != null;
+
         } catch (ParseException e) {
             return false;
         }
     }
 
+    // Check expiry status
     private String getExpiryStatus(String expiry) {
 
         SimpleDateFormat format = new SimpleDateFormat(
@@ -437,8 +466,10 @@ public class PantryActivity extends Activity {
 
             if (comparison < 0) {
                 return "Expired";
+
             } else if (comparison == 0) {
                 return "Expires today";
+
             } else {
                 return "Not expired";
             }
@@ -448,12 +479,14 @@ public class PantryActivity extends Activity {
         }
     }
 
+    // Set expiry status colour
     private int getExpiryColor(String expiry) {
 
         String status = getExpiryStatus(expiry);
 
         if (status.equals("Expired")) {
             return Color.RED;
+
         } else if (status.equals("Expires today")) {
             return Color.rgb(230, 126, 34);
         }
@@ -461,6 +494,7 @@ public class PantryActivity extends Activity {
         return darkGreen;
     }
 
+    // Confirm ingredient deletion
     private void confirmDelete(Ingredient ingredient) {
 
         new AlertDialog.Builder(this)
@@ -482,6 +516,7 @@ public class PantryActivity extends Activity {
                         ).show();
 
                         loadIngredients();
+
                     } else {
                         Toast.makeText(
                                 this,
